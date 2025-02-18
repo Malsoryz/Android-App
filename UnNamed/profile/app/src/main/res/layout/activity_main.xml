@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity"
+    android:background="#f5f5f5">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:src="@drawable/madinabg"
+        android:scaleType="centerCrop"
+        android:background="@drawable/roundedbg"
+        android:clipToOutline="true" />
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:background="@drawable/darkenefx" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Muhammad Ikmal Al-Ansory"
+        android:textAlignment="center"
+        android:textSize="18dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="80dp"/>
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="136dp"
+        android:padding="16dp"
+        android:gravity="center"
+        android:orientation="horizontal"
+        android:id="@+id/data">
+
+        <ImageView
+            android:layout_width="130dp"
+            android:layout_height="130dp"
+            android:background="@drawable/circleshape"
+            android:src="@drawable/ikmal"
+            android:scaleType="centerCrop"
+            android:clipToOutline="true"/>
+
+        <View
+            android:layout_width="16dp"
+            android:layout_height="match_parent"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <TextView
+                android:textSize="12dp"
+                android:layout_marginTop="32dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  Banjarmasin, Indonesia"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:drawableStart="@drawable/location"/>
+
+            <TextView
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  Front End Develover"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:drawableStart="@drawable/work"/>
+
+            <TextView
+                android:textSize="12dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="  github.com/Malsoryz"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:drawableStart="@drawable/link"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/data"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:id="@+id/buttongroup"
+        android:layout_marginHorizontal="16dp">
+
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Follow"
+            android:id="@+id/followbtn"
+            android:textColor="@color/white"
+            android:backgroundTint="#D30000"/>
+        <View
+            android:layout_width="16dp"
+            android:layout_height="match_parent"/>
+        <Button
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:text="Send Message"
+            android:id="@+id/sendbtn"
+            android:textColor="@color/white"
+            android:backgroundTint="#D30000"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/buttongroup"
+        android:layout_marginHorizontal="32dp"
+        android:layout_marginVertical="16dp"
+        android:layout_marginTop="27dp"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="BIO"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:alpha="0.7"
+            android:text="Seorang pelajar dari SMKN4 Banjarmasin, kelahiran Banjarmasin, Programmer pemula, ingin lebih banyak belajar dalam hal desain Front End. ingin menjadi Website Develover"
+            android:textColor="@color/black"
+            android:textSize="18dp"
+            android:layout_marginBottom="16dp"/>
+
+    </LinearLayout>
+
+</RelativeLayout>

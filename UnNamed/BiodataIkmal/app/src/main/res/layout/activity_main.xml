@@ -1,0 +1,171 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:background="@drawable/auroraborealism"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/black"
+        android:alpha="0.7"/>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Biodata"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/biodatabg"
+        android:textSize="24dp"
+        android:textColor="#fffbfe"
+        android:textStyle="bold"
+        android:paddingHorizontal="64dp"
+        android:paddingVertical="16dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="550dp"
+        android:layout_alignParentBottom="true"
+        android:padding="32dp"
+        android:background="@drawable/backgroundbg"
+        android:orientation="vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nama lengkap"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="70dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Muhammad Ikmal Al-Ansory"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tempat, Tanggal Lahir"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Banjarmasin, 9 November 2007"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alamat"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Jl. Padat Karya, No. 103, RT 20/RW 02"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Sungai Andai, Banjarmasin Utara"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Banjarmasin, Kalimantan Selatan"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Nomor Telepon"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="0853 8726 1315"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alamat Email"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ikmalalansory@gmail.com"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Kebangsaan"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Indonesia"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Agama"
+            android:textColor="#fffbfe"
+            android:layout_marginTop="8dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Islam"
+            android:textColor="#fffbfe"
+            android:textSize="16dp"
+            android:layout_marginLeft="8dp"/>
+    </LinearLayout>
+    <RelativeLayout
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_centerHorizontal="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="460dp"
+        android:background="@drawable/fotoborder">
+        <ImageView
+            android:layout_width="160dp"
+            android:layout_height="160dp"
+            android:background="@drawable/ikmal"
+            android:layout_margin="10dp"/>
+    </RelativeLayout>
+
+</RelativeLayout>

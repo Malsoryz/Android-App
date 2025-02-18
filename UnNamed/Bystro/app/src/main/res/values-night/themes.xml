@@ -1,0 +1,15 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Bystro" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your dark theme here. -->
+        <!-- <item name="colorPrimary">@color/my_dark_primary</item> -->
+        <item name="colorPrimary">@color/dark_primary</item>
+        <item name="colorSecondary">@color/dark_secondary</item>
+        <item name="colorPrimary05">@color/dark_primary_05</item>
+        <item name="colorSecondary05">@color/dark_secondary_05</item>
+        <item name="android:textColor">@color/dark_textcolor</item>
+        <item name="navbar_textcolor">@color/dark_textcolor</item>
+        <item name="Accent1">@color/dark_accent1</item>
+        <item name="Accent2">@color/dark_accent2</item>
+    </style>
+</resources>

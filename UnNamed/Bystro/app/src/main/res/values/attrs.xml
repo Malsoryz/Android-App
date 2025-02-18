@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <attr name="Accent1" format="color"/>
+    <attr name="Accent2" format="color"/>
+    <attr name="navbar_textcolor" format="color"/>
+    <attr name="colorPrimary05" format="color"/>
+    <attr name="colorSecondary05" format="color"/>
+    <attr name="colorPrimary" format="color"/>
+</resources>

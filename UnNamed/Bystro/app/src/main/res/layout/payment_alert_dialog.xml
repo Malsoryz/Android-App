@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="@drawable/alert_dialog_bg"
+    android:padding="16dp">
+    <TextView
+        android:id="@+id/addressdialogtitle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Select Payment"
+        android:textAlignment="center"
+        android:textColor="?attr/navbar_textcolor"
+        android:textSize="20dp"/>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="32dp"/>
+    <LinearLayout
+        android:id="@+id/codpayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/paymentitembg"
+        android:padding="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="COD (default) :"
+            android:textColor="?attr/Accent1"
+            android:textSize="16dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:text="payment via cash on delivery."
+            android:textColor="?attr/navbar_textcolor"
+            android:textSize="14dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:text="payment at recipient location."
+            android:textColor="?attr/navbar_textcolor"
+            android:textSize="14dp"
+            android:alpha="0.7"/>
+    </LinearLayout>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="8dp"/>
+    <LinearLayout
+        android:id="@+id/electronicpayment"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/paymentitembg"
+        android:padding="16dp"
+        android:orientation="vertical">
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="E-Pay (Mobile Wallet) :"
+            android:textColor="?attr/Accent1"
+            android:textSize="16dp"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:text="payment via mobile wallet."
+            android:textColor="?attr/navbar_textcolor"
+            android:textSize="14dp"
+            android:alpha="0.7"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:text="Items will be received immediately after arriving at the recipient's location."
+            android:textColor="?attr/navbar_textcolor"
+            android:textSize="14dp"
+            android:alpha="0.7"/>
+    </LinearLayout>
+</LinearLayout>

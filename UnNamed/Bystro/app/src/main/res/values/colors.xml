@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <!--darkmode-->
+    <color name="dark_primary">#0f172a</color>
+    <color name="dark_secondary">#060910</color>
+    <color name="dark_primary_05">#800f172a</color>
+    <color name="dark_secondary_05">#80060910</color>
+    <color name="dark_textcolor">#f8fafc</color>
+    <color name="dark_accent1">#67e8f9</color>
+    <color name="dark_accent2">#06b5d4</color>
+
+    <!--lightmode-->
+    <color name="primary">#f1f5f9</color>
+    <color name="secondary">#e2e8f0</color>
+    <color name="primary_05">#80f1f5f9</color>
+    <color name="secondary_05">#80e2e8f0</color>
+    <color name="textcolor">#060910</color>
+    <color name="accent1">#0e7490</color>
+    <color name="accent2">#164e63</color>
+
+</resources>

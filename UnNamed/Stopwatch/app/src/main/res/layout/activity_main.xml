@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/background"
+    tools:context=".MainActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingTop="64dp"
+        android:paddingHorizontal="22dp"
+        android:paddingBottom="32dp"
+        android:layout_alignParentTop="true"
+        android:id="@+id/header"
+        android:gravity="center"
+        >
+
+        <TextView
+            android:id="@+id/minute"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="00"
+            android:textSize="82dp"
+            android:textColor="@color/textcolor1"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text=":"
+            android:textSize="82dp"
+            android:textColor="@color/textcolor1"
+            />
+        <TextView
+            android:id="@+id/second"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="00"
+            android:textSize="82dp"
+            android:textColor="@color/textcolor1"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text=":"
+            android:textSize="82dp"
+            android:textColor="@color/textcolor1"
+            />
+        <TextView
+            android:id="@+id/milisecond"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAlignment="center"
+            android:text="00"
+            android:textSize="82dp"
+            android:textColor="@color/textcolor1"
+            />
+
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:paddingHorizontal="22dp"
+        android:paddingBottom="16dp"
+        android:layout_below="@id/header"
+        android:layout_above="@id/buttoncontainer"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/buttoncontainer"
+        android:paddingHorizontal="22dp"
+        android:paddingTop="16dp"
+        android:paddingBottom="32dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:src="@drawable/reset"
+            android:background="@drawable/button"
+            android:layout_marginRight="4dp"
+            android:id="@+id/reset"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:src="@drawable/start"
+            android:background="@drawable/button"
+            android:id="@+id/play"
+            />
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="70dp"
+            android:layout_weight="1"
+            android:src="@drawable/add"
+            android:background="@drawable/button"
+            android:layout_marginLeft="4dp"
+            android:id="@+id/add"
+            />
+
+    </LinearLayout>
+
+</RelativeLayout>

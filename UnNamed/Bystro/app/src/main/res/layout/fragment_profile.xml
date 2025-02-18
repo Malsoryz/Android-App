@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ProfileFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:orientation="vertical">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="8dp"
+            android:gravity="center">
+
+            <ImageView
+                android:layout_width="100dp"
+                android:layout_height="100dp"
+                android:src="@drawable/guest"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:background="@drawable/guest_rounded_bg"
+                android:clipToOutline="true"/>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="16dp"
+                android:orientation="vertical">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Guest 2024"
+                    android:textSize="22dp"
+                    android:textColor="?attr/navbar_textcolor"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="guest123@example.com"
+                    android:textSize="16dp"
+                    android:alpha="0.7"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"
+            android:background="?attr/navbar_textcolor"
+            android:alpha="0.5"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+            <TextView
+                android:id="@+id/editaddress"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Edit Address"
+                android:textSize="16sp"
+                android:paddingVertical="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                app:drawableStartCompat="@drawable/edit_icon"
+                app:drawableTint="?attr/Accent1"/>
+        </LinearLayout>
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginVertical="8dp"
+            android:background="?attr/navbar_textcolor"
+            android:alpha="0.5"/>
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="8dp">
+
+            <TextView
+                android:id="@+id/resetdatabase"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Reset Database"
+                android:textSize="16sp"
+                android:paddingVertical="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                app:drawableStartCompat="@drawable/refresh_icon"
+                app:drawableTint="?attr/Accent1"/>
+            <TextView
+                android:id="@+id/resetproductlist"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Reset Product list"
+                android:textSize="16sp"
+                android:paddingVertical="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                app:drawableStartCompat="@drawable/refresh_icon"
+                app:drawableTint="?attr/Accent1"/>
+            <TextView
+                android:id="@+id/resetaddress"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Reset Address"
+                android:textSize="16sp"
+                android:paddingVertical="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                app:drawableStartCompat="@drawable/refresh_icon"
+                app:drawableTint="?attr/Accent1"/>
+            <TextView
+                android:id="@+id/resetorders"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Reset Orders"
+                android:textSize="16sp"
+                android:paddingVertical="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                app:drawableStartCompat="@drawable/refresh_icon"
+                app:drawableTint="?attr/Accent1"/>
+            <TextView
+                android:id="@+id/refresh"
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+                android:layout_weight="1"
+                android:text="Refresh"
+                android:textSize="16sp"
+                android:paddingVertical="8dp"
+                android:drawablePadding="16dp"
+                android:gravity="center|start"
+                app:drawableStartCompat="@drawable/refresh_icon"
+                app:drawableTint="?attr/Accent1"/>
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>

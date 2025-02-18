@@ -1,5 +1,5 @@
 ![Android Studio](https://img.shields.io/badge/android%20studio-346ac1?style=for-the-badge&logo=android%20studio&logoColor=white) <br>
-#ETR Players
+# ETR Players
 Aplikasi Pemutar Video yang akan memutar video berdasarkan dalam aplikasi yang video nya berada di res/raw
 
 ## Note

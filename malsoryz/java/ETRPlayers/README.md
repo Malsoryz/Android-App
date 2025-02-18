@@ -1,7 +1,7 @@
-#ETR Players
+# ETR Players
 Aplikasi Pemutar Video yang akan memutar video berdasarkan dalam aplikasi yang video nya berada di res/raw
 
-##Note
+## Note
 Aplikasi ini merupakan sebuah tugas pemrograman jurusan saya.
 Aplikasi ini juga tidak bisa di clone, build dan langsung di jalankan begitu saja karena asset video dari projek ini cukup besar mengharuskan saya untuk menghapusnya.
 Setelah melakukan clone dan build selanjutnya harus menambahkan asset video yang bernama:

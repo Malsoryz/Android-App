@@ -23,10 +23,22 @@ public class ETRDatabase extends SQLiteOpenHelper {
     public static final String VIDEO_COLUMN_DESC = "videodesc";
     public static final String VIDEO_COLUMN_PATH = "path";
     public static final String VIDEO_COLUMN_THUMBNAIL = "thumbnail";
+    public static final String[] VIDEO_COLUMN_ALL = {
+            VIDEO_COLUMN_ID,
+            VIDEO_COLUMN_TITLE,
+            VIDEO_COLUMN_CREATOR,
+            VIDEO_COLUMN_DESC,
+            VIDEO_COLUMN_PATH,
+            VIDEO_COLUMN_THUMBNAIL
+    };
 
     public static final String HISTORY_TABLE_NAME = "history";
     public static final String HISTORY_COLUMN_ID = "_id";
     public static final String HISTORY_COLUMN_LAST_PLAY_AT = "lastPlayed";
+    public static final String[] HISTORY_COLUMN_ALL = {
+            HISTORY_COLUMN_ID,
+            HISTORY_COLUMN_LAST_PLAY_AT
+    };
 
     private static final String CREATE_VIDEO_TABLE =
             "CREATE TABLE " + VIDEO_TABLE_NAME + "(" +
@@ -84,6 +96,11 @@ public class ETRDatabase extends SQLiteOpenHelper {
         return db.rawQuery("SELECT * FROM " + VIDEO_TABLE_NAME, null);
     }
 
+    public Cursor getVideoListWithExclude(int id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        return db.rawQuery("SELECT * FROM " + VIDEO_TABLE_NAME + " WHERE " + VIDEO_COLUMN_ID + " != " + id, null);
+    }
+
     public void addHistory(Integer videoId, long lastPlayed) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
@@ -94,6 +111,11 @@ public class ETRDatabase extends SQLiteOpenHelper {
         db.setTransactionSuccessful();
         db.endTransaction();
         db.close();
+    }
+
+    public void clearHistory() {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DELETE FROM " + HISTORY_TABLE_NAME);
     }
 
     public Cursor getHistoryList() {

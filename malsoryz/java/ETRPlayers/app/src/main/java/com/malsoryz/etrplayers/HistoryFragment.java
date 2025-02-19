@@ -9,7 +9,10 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.TextView;
 
 public class HistoryFragment extends Fragment {
 
@@ -28,8 +31,12 @@ public class HistoryFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_history, container, false);
+        LinearLayout whenListExist = layout.findViewById(R.id.whenListExist);
+        TextView whenListIsEmpty = layout.findViewById(R.id.whenListIsEmpty);
+        Button deleteHistory = layout.findViewById(R.id.deleteHistory);
         ListView historyList = layout.findViewById(R.id.historyList);
         historyList.setAdapter(adapter);
+
         historyList.setOnItemClickListener((parent, view, position, id) -> {
             getListView = (Cursor) parent.getItemAtPosition(position);
             if (getListView != null) {
@@ -50,6 +57,11 @@ public class HistoryFragment extends Fragment {
                 startActivity(intent);
             }
         });
+        deleteHistory.setOnClickListener(delete -> db.clearHistory());
+        if (adapter == null || adapter.getCount() == 0) {
+            whenListIsEmpty.setVisibility(View.VISIBLE);
+            whenListExist.setVisibility(View.GONE);
+        }
         return layout;
     }
 }

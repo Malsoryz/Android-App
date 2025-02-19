@@ -1,6 +1,9 @@
 package com.malsoryz.etrplayers;
 
+import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.widget.ImageButton;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -13,10 +16,30 @@ import androidx.fragment.app.FragmentTransaction;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
+
+import static com.malsoryz.etrplayers.Utils.*;
 
 public class MainActivity extends AppCompatActivity {
 
     private ETRDatabase db;
+    private ImageButton aboutButton;
+    private BottomNavigationView bottomNavigation;
+    private Map<Integer, Fragment> fragmentMap;
+    private Fragment setFragment;
+
+    private void init() {
+        aboutButton = findViewById(R.id.aboutButton);
+        db = new ETRDatabase(this);
+        bottomNavigation = findViewById(R.id.bottomNavigation);
+
+        //inisiasi fragment
+        fragmentMap = new HashMap<>();
+        fragmentMap.put(R.id.homeMenu, new HomeFragment());
+        fragmentMap.put(R.id.historyMenu, new HistoryFragment());
+        setFragment = null;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,8 +52,13 @@ public class MainActivity extends AppCompatActivity {
             return insets;
         });
 
-        db = new ETRDatabase(this);
-        db.recreateDatabase();
+        init();
+
+        String stringUri = "https://github.com/Malsoryz/Android-App/tree/main/malsoryz/java/ETRPlayers#etr-players";
+        aboutButton.setOnClickListener(openGit -> openLink(this, stringUri));
+
+        //menambahkan data
+        db.recreateDatabase(); //hapus jika sudah siap
         try {
             db.addVideo(1,
                     "Never Gonna Give You Up",
@@ -64,32 +92,15 @@ public class MainActivity extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
-        if (savedInstanceState == null) {
-            loadFragment(new HomeFragment());
-        }
-
-        BottomNavigationView bottomNavigation = findViewById(R.id.bottomNavigation);
+        //setting fragment
+        if (savedInstanceState == null) loadFragment(this, new HomeFragment(), R.id.fragmentPoint);
         bottomNavigation.setOnItemSelectedListener(item -> {
-            Fragment setFragment = null;
-            if (item.getItemId() == R.id.homeMenu) {
-                setFragment = new HomeFragment();
-            } else if (item.getItemId() == R.id.historyMenu) {
-                setFragment = new HistoryFragment();
-            } else if (item.getItemId() == R.id.settingMenu) {
-                setFragment = new SettingFragment();
-            }
-
+            setFragment = fragmentMap.get(item.getItemId());
             if (setFragment != null) {
-                loadFragment(setFragment);
+                loadFragment(this, setFragment, R.id.fragmentPoint);
                 return true;
             }
             return false;
         });
-    }
-
-    private void loadFragment(Fragment f) {
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-        transaction.replace(R.id.fragmentPoint, f);
-        transaction.commit();
     }
 }

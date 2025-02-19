@@ -17,15 +17,63 @@ import androidx.media3.common.MediaItem;
 import androidx.media3.exoplayer.ExoPlayer;
 import androidx.media3.ui.PlayerView;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class VideoPlayerActivity extends AppCompatActivity {
 
+    private ETRDatabase db;
+    private Cursor cursor, getListView;
+    private String videoTitle, videoCreator, videoDesc, shortDesc;
+    private int videoId, videoSource;
+    private long lastPlayed;
+    private TextView viewTitle, viewCreator, viewDesc;
+    private boolean isDescExpanded;
     private PlayerView videoPlayer;
     private ExoPlayer player;
-    private boolean isDescExpanded = false;
-    private ETRDatabase db;
-    private Cursor cursor;
+    private ListView videoList;
     private VideoAdapter adapter;
-    private int videoId, videoSource;
+
+    private String getStringExtraFromIntent(String key, String defaultValue) {
+        Intent intent = new Intent(getIntent());
+        return intent.hasExtra(key) ? intent.getStringExtra(key) : defaultValue;
+    }
+
+    private void init() {
+        db = new ETRDatabase(this);
+        isDescExpanded = false;
+
+        //inisiasi dan mengambil data intent sebelumnya
+        Intent getIntent = new Intent(getIntent());
+        videoId = getIntent.getIntExtra(ETRDatabase.VIDEO_COLUMN_ID,0);
+        videoTitle = getIntent.getStringExtra(ETRDatabase.VIDEO_COLUMN_TITLE);
+        videoCreator = getIntent.getStringExtra(ETRDatabase.VIDEO_COLUMN_CREATOR);
+        videoDesc = getIntent.getStringExtra(ETRDatabase.VIDEO_COLUMN_DESC);
+        videoSource = getIntent.getIntExtra(ETRDatabase.VIDEO_COLUMN_PATH,0);
+        lastPlayed = getIntent.getLongExtra(ETRDatabase.HISTORY_COLUMN_LAST_PLAY_AT, 0);
+
+        //inisiasi info video
+        viewTitle = findViewById(R.id.videoTitle);
+        viewCreator = findViewById(R.id.videoCreator);
+        viewDesc = findViewById(R.id.seeMoreDesc);
+        shortDesc = videoDesc.length() > 50 ? videoDesc.substring(0, 50) + "..." : videoDesc;
+        //setting info video
+        viewTitle.setText(videoTitle);
+        viewCreator.setText(videoCreator);
+        viewDesc.setMaxLines(1);
+        viewDesc.setText(shortDesc);
+
+        //inisiasi listview
+        cursor = db.getVideoListWithExclude(videoId);
+        adapter = new VideoAdapter(this, cursor, 0);
+        videoList = findViewById(R.id.videoList);
+        videoList.setAdapter(adapter);
+
+        //inisiasi PlayerView
+        videoPlayer = findViewById(R.id.videoPlayer);
+        player = new ExoPlayer.Builder(this).build();
+        videoPlayer.setPlayer(player);
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,56 +86,36 @@ public class VideoPlayerActivity extends AppCompatActivity {
             return insets;
         });
 
-        db = new ETRDatabase(this);
-        cursor = db.getVideoList();
-        adapter = new VideoAdapter(this, cursor, 0);
+        init();
 
-        Intent getIntent = new Intent(getIntent());
-        videoId = getIntent.getIntExtra(ETRDatabase.VIDEO_COLUMN_ID,0);
-        String videoTitle = getIntent.getStringExtra(ETRDatabase.VIDEO_COLUMN_TITLE);
-        String videoCreator = getIntent.getStringExtra(ETRDatabase.VIDEO_COLUMN_CREATOR);
-        String videoDesc = getIntent.getStringExtra(ETRDatabase.VIDEO_COLUMN_DESC);
-        videoSource = getIntent.getIntExtra(ETRDatabase.VIDEO_COLUMN_PATH,0);
-        long lastPlayed = getIntent.getLongExtra(ETRDatabase.HISTORY_COLUMN_LAST_PLAY_AT, 0);
-
-        TextView viewTitle = findViewById(R.id.videoTitle);
-        viewTitle.setText(videoTitle);
-        TextView viewCreator = findViewById(R.id.videoCreator);
-        viewCreator.setText(videoCreator);
-        TextView viewDesc = findViewById(R.id.seeMoreDesc);
-        viewDesc.setMaxLines(1);
-        String shortDesc = videoDesc.length() > 50 ? videoDesc.substring(0, 50) + "..." : videoDesc;
-        viewDesc.setText(shortDesc);
-
-        viewDesc.setOnClickListener(v -> {
-            if (isDescExpanded) {
-                viewDesc.setText(shortDesc);
-                viewDesc.setMaxLines(1);
-            } else {
-                viewDesc.setText(videoDesc);
-                viewDesc.setMaxLines(100);
-            }
-
-            isDescExpanded = !isDescExpanded;
-        });
-
-        ListView videoList = findViewById(R.id.videoList);
-        videoList.setAdapter(adapter);
-
-        videoPlayer = findViewById(R.id.videoPlayer);
-        player = new ExoPlayer.Builder(this).build();
-        videoPlayer.setPlayer(player);
+        viewDesc.setOnClickListener(v -> expandDesc());
 
         Uri videoUri = Uri.parse("android.resource://" + getPackageName() + "/" + videoSource);
         playVideo(videoUri, lastPlayed);
 
+        videoList.setOnItemClickListener((parent, view, position, id) -> {
+            getListView = (Cursor) parent.getItemAtPosition(position);
+            if (getListView != null) {
+                int videoId = getListView.getInt(getListView.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_ID));
+                String videoTitle = getListView.getString(getListView.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_TITLE));
+                String videoCreator = getListView.getString(getListView.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_CREATOR));
+                String videoDesc = getListView.getString(getListView.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_DESC));
+                int videoPath = getListView.getInt(getListView.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_PATH));
+
+                Intent intent = new Intent(this, VideoPlayerActivity.class);
+                intent.putExtra(ETRDatabase.VIDEO_COLUMN_ID, videoId);
+                intent.putExtra(ETRDatabase.VIDEO_COLUMN_TITLE, videoTitle);
+                intent.putExtra(ETRDatabase.VIDEO_COLUMN_CREATOR, videoCreator);
+                intent.putExtra(ETRDatabase.VIDEO_COLUMN_DESC, videoDesc);
+                intent.putExtra(ETRDatabase.VIDEO_COLUMN_PATH, videoPath);
+                startActivity(intent);
+            }
+        });
+
         getOnBackPressedDispatcher().addCallback(this, new OnBackPressedCallback(true) {
             @Override
             public void handleOnBackPressed() {
-                if (player != null) {
-                    long lastPlayed = player.getCurrentPosition();
-                    db.addHistory(videoId,lastPlayed);
-                }
+                getLastPlayed();
                 finish();
             }
         });
@@ -99,6 +127,24 @@ public class VideoPlayerActivity extends AppCompatActivity {
         player.prepare();
         player.seekTo(lastPlayed);
         player.setPlayWhenReady(true);
+    }
+
+    private void expandDesc() {
+        if (isDescExpanded) {
+            viewDesc.setText(shortDesc);
+            viewDesc.setMaxLines(1);
+        } else {
+            viewDesc.setText(videoDesc);
+            viewDesc.setMaxLines(100);
+        }
+        isDescExpanded = !isDescExpanded;
+    }
+
+    private void getLastPlayed() {
+        if (player != null) {
+            long lastPlayed = player.getCurrentPosition();
+            db.addHistory(videoId, lastPlayed);
+        }
     }
 
     @Override
@@ -116,9 +162,6 @@ public class VideoPlayerActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (player != null) {
-            long lastPlayed = player.getCurrentPosition();
-            db.addHistory(videoId,lastPlayed);
-        }
+        getLastPlayed();
     }
 }

@@ -10,9 +10,4 @@
         android:enabled="true"
         android:icon="@drawable/icon_history"
         android:title="History" />
-    <item
-        android:id="@+id/settingMenu"
-        android:enabled="true"
-        android:icon="@drawable/icon_setting"
-        android:title="Settings" />
 </menu>

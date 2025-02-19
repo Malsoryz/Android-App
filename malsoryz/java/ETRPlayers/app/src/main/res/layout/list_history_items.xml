@@ -37,6 +37,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="Title"
+            android:maxLines="3"
             android:textColor="@color/text_main"
             android:textSize="14sp"
             android:textAlignment="textStart"

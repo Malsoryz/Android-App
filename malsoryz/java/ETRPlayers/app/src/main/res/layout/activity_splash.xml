@@ -5,6 +5,56 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/bg_primary"
     tools:context=".SplashActivity">
+
+    <LinearLayout
+        android:id="@+id/brandLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <ImageView
+            android:layout_width="164dp"
+            android:layout_height="164dp"
+            android:src="@drawable/ikmal"
+            android:clipToOutline="true"
+            android:background="@drawable/rounded_frame"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="ETR"
+            android:textColor="@color/accent_1"
+            android:textAlignment="center"
+            android:textSize="64dp"
+            android:fontFamily="@font/poppins_bold"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="-40dp"
+            android:text="Players"
+            android:textColor="@color/accent_3"
+            android:textAlignment="center"
+            android:textSize="28dp"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAlignment="center"
+        android:layout_marginBottom="8dp"
+        android:text="By: Muhammad Ikmal Al-ansory XI RPL 2"
+        android:textColor="@color/text_main"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,7 +13,6 @@ import android.widget.TextView;
 
 public class HistoryAdapter extends CursorAdapter {
 
-    private long lastMicroSeconds = -1;
     public HistoryAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -33,18 +31,15 @@ public class HistoryAdapter extends CursorAdapter {
         TextView viewLastPlayed = view.findViewById(R.id.videoLastPlayed);
 
         byte[] byteThumbnail = cursor.getBlob(cursor.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_THUMBNAIL));
-        String displayLastPlayed = viewLastPlayed.getText().toString();
+        String displayLastPlayed = "Last played: ";
         long microSeconds = cursor.getLong(cursor.getColumnIndexOrThrow(ETRDatabase.HISTORY_COLUMN_LAST_PLAY_AT));
         long totalSeconds = microSeconds / 1000;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
-        String formatedLastPlayedTime = String.format("%02d:%02d", minutes, seconds);
+        @SuppressLint("DefaultLocale") String formatedLastPlayedTime = String.format("%02d:%02d", minutes, seconds);
 
-        if (microSeconds != lastMicroSeconds) {
-            viewThumbnail.setImageBitmap(BitmapFactory.decodeByteArray(byteThumbnail, 0, byteThumbnail.length));
-            viewTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_TITLE)));
-            viewLastPlayed.setText(displayLastPlayed + formatedLastPlayedTime);
-            lastMicroSeconds = microSeconds; // Update lastMicroSeconds
-        }
+        viewThumbnail.setImageBitmap(BitmapFactory.decodeByteArray(byteThumbnail, 0, byteThumbnail.length));
+        viewTitle.setText(cursor.getString(cursor.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_TITLE)));
+        viewLastPlayed.setText(displayLastPlayed + formatedLastPlayedTime);
     }
 }

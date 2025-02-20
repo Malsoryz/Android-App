@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,13 +25,14 @@ import static com.malsoryz.etrplayers.Utils.*;
 public class MainActivity extends AppCompatActivity {
 
     private ETRDatabase db;
-    private ImageButton aboutButton;
+    private ImageButton aboutButton, reloadButton;
     private BottomNavigationView bottomNavigation;
     private Map<Integer, Fragment> fragmentMap;
     private Fragment setFragment;
 
     private void init() {
         aboutButton = findViewById(R.id.aboutButton);
+        reloadButton = findViewById(R.id.reloadButton);
         db = new ETRDatabase(this);
         bottomNavigation = findViewById(R.id.bottomNavigation);
 
@@ -56,9 +58,13 @@ public class MainActivity extends AppCompatActivity {
 
         String stringUri = "https://github.com/Malsoryz/Android-App/tree/main/malsoryz/java/ETRPlayers#etr-players";
         aboutButton.setOnClickListener(openGit -> openLink(this, stringUri));
+        reloadButton.setOnClickListener(reload -> {
+            Toast.makeText(this, "Reloading...", Toast.LENGTH_SHORT).show();
+            recreate();
+        });
 
         //menambahkan data
-        db.recreateDatabase(); //hapus jika sudah siap
+//        db.recreateDatabase(); //hapus jika sudah siap
         try {
             db.addVideo(1,
                     "Never Gonna Give You Up",

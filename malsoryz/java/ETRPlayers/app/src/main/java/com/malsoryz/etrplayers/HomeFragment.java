@@ -26,11 +26,15 @@ public class HomeFragment extends Fragment {
         adapter = new VideoAdapter(getContext(), cursor, 0);
     }
 
+    private void init(View layout) {
+        videoList = layout.findViewById(R.id.videoList);
+        videoList.setAdapter(adapter);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_home, container, false);
-        videoList = layout.findViewById(R.id.videoList);
-        videoList.setAdapter(adapter);
+        init(layout);
         videoList.setOnItemClickListener(((parent, view, position, id) -> {
             getListView = (Cursor) parent.getItemAtPosition(position);
             if (getListView != null) {

@@ -13,12 +13,19 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Objects;
 
 public class HistoryFragment extends Fragment {
 
     private ETRDatabase db;
     private Cursor cursor, getListView;
     private HistoryAdapter adapter;
+    private LinearLayout whenListExist;
+    private TextView whenListIsEmpty;
+    private Button deleteHistory;
+    private ListView historyList;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -28,15 +35,18 @@ public class HistoryFragment extends Fragment {
         adapter = new HistoryAdapter(getContext(), cursor, 0);
     }
 
+    private void init(View layout) {
+        whenListExist = layout.findViewById(R.id.whenListExist);
+        whenListIsEmpty = layout.findViewById(R.id.whenListIsEmpty);
+        deleteHistory = layout.findViewById(R.id.deleteHistory);
+        historyList = layout.findViewById(R.id.historyList);
+        historyList.setAdapter(adapter);
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View layout = inflater.inflate(R.layout.fragment_history, container, false);
-        LinearLayout whenListExist = layout.findViewById(R.id.whenListExist);
-        TextView whenListIsEmpty = layout.findViewById(R.id.whenListIsEmpty);
-        Button deleteHistory = layout.findViewById(R.id.deleteHistory);
-        ListView historyList = layout.findViewById(R.id.historyList);
-        historyList.setAdapter(adapter);
-
+        init(layout);
         historyList.setOnItemClickListener((parent, view, position, id) -> {
             getListView = (Cursor) parent.getItemAtPosition(position);
             if (getListView != null) {
@@ -57,11 +67,19 @@ public class HistoryFragment extends Fragment {
                 startActivity(intent);
             }
         });
-        deleteHistory.setOnClickListener(delete -> db.clearHistory());
+        deleteHistory.setOnClickListener(delete -> {
+            db.clearHistory();
+            requireActivity().recreate();
+            Toast.makeText(getContext(), "Reloading...", Toast.LENGTH_SHORT).show();
+        });
+        ifAdapterEmpty();
+        return layout;
+    }
+
+    private void ifAdapterEmpty() {
         if (adapter == null || adapter.getCount() == 0) {
             whenListIsEmpty.setVisibility(View.VISIBLE);
             whenListExist.setVisibility(View.GONE);
         }
-        return layout;
     }
 }

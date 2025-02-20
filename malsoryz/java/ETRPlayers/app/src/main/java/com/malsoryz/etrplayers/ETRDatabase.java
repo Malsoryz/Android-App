@@ -23,22 +23,10 @@ public class ETRDatabase extends SQLiteOpenHelper {
     public static final String VIDEO_COLUMN_DESC = "videodesc";
     public static final String VIDEO_COLUMN_PATH = "path";
     public static final String VIDEO_COLUMN_THUMBNAIL = "thumbnail";
-    public static final String[] VIDEO_COLUMN_ALL = {
-            VIDEO_COLUMN_ID,
-            VIDEO_COLUMN_TITLE,
-            VIDEO_COLUMN_CREATOR,
-            VIDEO_COLUMN_DESC,
-            VIDEO_COLUMN_PATH,
-            VIDEO_COLUMN_THUMBNAIL
-    };
 
     public static final String HISTORY_TABLE_NAME = "history";
     public static final String HISTORY_COLUMN_ID = "_id";
     public static final String HISTORY_COLUMN_LAST_PLAY_AT = "lastPlayed";
-    public static final String[] HISTORY_COLUMN_ALL = {
-            HISTORY_COLUMN_ID,
-            HISTORY_COLUMN_LAST_PLAY_AT
-    };
 
     private static final String CREATE_VIDEO_TABLE =
             "CREATE TABLE " + VIDEO_TABLE_NAME + "(" +
@@ -71,22 +59,23 @@ public class ETRDatabase extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addVideo(Integer id, String title, String creator, String videoDesc, Integer path, Bitmap bitmap) {
+    public void addVideo(Integer id, String title, String creator, String videoDesc, Integer path, byte[] thumbnail) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
-
-        byte[] thumbnail = bitmapToByteArray(bitmap);
-
-        ContentValues values = new ContentValues();
-        values.put(VIDEO_COLUMN_ID, id);
-        values.put(VIDEO_COLUMN_TITLE, title);
-        values.put(VIDEO_COLUMN_CREATOR, creator);
-        values.put(VIDEO_COLUMN_DESC, videoDesc);
-        values.put(VIDEO_COLUMN_PATH, path);
-        values.put(VIDEO_COLUMN_THUMBNAIL, thumbnail);
-        db.insert(VIDEO_TABLE_NAME, null, values);
-
-        db.setTransactionSuccessful();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(VIDEO_COLUMN_ID, id);
+            values.put(VIDEO_COLUMN_TITLE, title);
+            values.put(VIDEO_COLUMN_CREATOR, creator);
+            values.put(VIDEO_COLUMN_DESC, videoDesc);
+            values.put(VIDEO_COLUMN_PATH, path);
+            values.put(VIDEO_COLUMN_THUMBNAIL, thumbnail);
+            db.insert(VIDEO_TABLE_NAME, null, values);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.setTransactionSuccessful();
+        }
         db.endTransaction();
         db.close();
     }
@@ -104,11 +93,16 @@ public class ETRDatabase extends SQLiteOpenHelper {
     public void addHistory(Integer videoId, long lastPlayed) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.beginTransaction();
-        ContentValues values = new ContentValues();
-        values.put(HISTORY_COLUMN_ID, videoId);
-        values.put(HISTORY_COLUMN_LAST_PLAY_AT, lastPlayed);
-        db.insertWithOnConflict(HISTORY_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
-        db.setTransactionSuccessful();
+        try {
+            ContentValues values = new ContentValues();
+            values.put(HISTORY_COLUMN_ID, videoId);
+            values.put(HISTORY_COLUMN_LAST_PLAY_AT, lastPlayed);
+            db.insertWithOnConflict(HISTORY_TABLE_NAME, null, values, SQLiteDatabase.CONFLICT_REPLACE);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        } finally {
+            db.setTransactionSuccessful();
+        }
         db.endTransaction();
         db.close();
     }
@@ -142,22 +136,24 @@ public class ETRDatabase extends SQLiteOpenHelper {
         db.close();
     }
 
-    public static Bitmap getFrameFromVideo(Context context, int resId, long timeUs) throws IOException {
+    public static byte[] getThumbnailFromVideo(Context context, int resId, long timeUs) throws IOException {
         MediaMetadataRetriever retriever = new MediaMetadataRetriever();
+        byte[] thumbnail = null;
         try {
             Uri videoUri = Uri.parse("android.resource://" + context.getPackageName() + "/" + resId);
             retriever.setDataSource(context, videoUri);
-            return retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            Bitmap bitmap = retriever.getFrameAtTime(timeUs, MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+            if (bitmap != null) {
+                ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
+                thumbnail = stream.toByteArray();
+                bitmap.recycle();
+            }
         } catch (IllegalArgumentException | SecurityException e) {
             throw new RuntimeException(e);
         } finally {
             retriever.release();
         }
-    }
-
-    public static byte[] bitmapToByteArray(Bitmap bitmap) {
-        ByteArrayOutputStream stream = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, stream);
-        return stream.toByteArray();
+        return thumbnail;
     }
 }

@@ -1,5 +1,7 @@
 package com.malsoryz.etrplayers;
 
+import static java.security.AccessController.getContext;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.database.Cursor;
@@ -13,6 +15,9 @@ import android.widget.TextView;
 
 public class HistoryAdapter extends CursorAdapter {
 
+    private TextView viewTitle, viewLastPlayed;
+    private ImageView viewThumbnail;
+
     public HistoryAdapter(Context context, Cursor c, int flags) {
         super(context, c, flags);
     }
@@ -23,17 +28,20 @@ public class HistoryAdapter extends CursorAdapter {
         return inflater.inflate(R.layout.list_history_items, parent, false);
     }
 
+    private void init(View view) {
+        viewThumbnail = view.findViewById(R.id.thumbnail);
+        viewTitle = view.findViewById(R.id.videoTitle);
+        viewLastPlayed = view.findViewById(R.id.videoLastPlayed);
+    }
+
     @SuppressLint("SetTextI18n")
     @Override
     public void bindView(View view, Context context, Cursor cursor) {
-        ImageView viewThumbnail = view.findViewById(R.id.thumbnail);
-        TextView viewTitle = view.findViewById(R.id.videoTitle);
-        TextView viewLastPlayed = view.findViewById(R.id.videoLastPlayed);
+        init(view);
 
         byte[] byteThumbnail = cursor.getBlob(cursor.getColumnIndexOrThrow(ETRDatabase.VIDEO_COLUMN_THUMBNAIL));
         String displayLastPlayed = "Last played: ";
-        long microSeconds = cursor.getLong(cursor.getColumnIndexOrThrow(ETRDatabase.HISTORY_COLUMN_LAST_PLAY_AT));
-        long totalSeconds = microSeconds / 1000;
+        long totalSeconds = cursor.getLong(cursor.getColumnIndexOrThrow(ETRDatabase.HISTORY_COLUMN_LAST_PLAY_AT)) / 1000;
         long minutes = totalSeconds / 60;
         long seconds = totalSeconds % 60;
         @SuppressLint("DefaultLocale") String formatedLastPlayedTime = String.format("%02d:%02d", minutes, seconds);

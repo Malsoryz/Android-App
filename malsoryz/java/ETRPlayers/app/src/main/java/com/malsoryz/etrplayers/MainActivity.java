@@ -71,28 +71,28 @@ public class MainActivity extends AppCompatActivity {
                     "Rick Ashley",
                     "just a rickroll",
                     R.raw.rickroll,
-                    ETRDatabase.getFrameFromVideo(this, R.raw.rickroll, 3000000)
+                    ETRDatabase.getThumbnailFromVideo(this, R.raw.rickroll, 3000000)
             );
             db.addVideo(2,
                     "The Hour of Joy",
                     "Playtime Co",
                     "The special event in Playtime Co Factory",
                     R.raw.the_hour_of_joy,
-                    ETRDatabase.getFrameFromVideo(this, R.raw.the_hour_of_joy, 4000000)
+                    ETRDatabase.getThumbnailFromVideo(this, R.raw.the_hour_of_joy, 4000000)
             );
             db.addVideo(3,
                     "Bukti Pemerintah belum peduli dengan produksi animasi lokal!!!",
                     "Portal Animasi",
                     "NOTE!! \"saya bukan pemilik dari clip, gambar maupun suara yang ada dalam video ini. saya menggunakan beberapa klip hanya untuk keperluan kritik dan review saja. Jika Anda ingin melihat pertunjukan dan episode secara lengkap. anda bisa cek di layanan streaming yang tersedia secara online.\"",
                     R.raw.pemerintah_tidak_peduli_dengan_animator,
-                    ETRDatabase.getFrameFromVideo(this, R.raw.pemerintah_tidak_peduli_dengan_animator, 4000000)
+                    ETRDatabase.getThumbnailFromVideo(this, R.raw.pemerintah_tidak_peduli_dengan_animator, 4000000)
             );
             db.addVideo(4,
                     "Absolutely normal cats",
                     "CAT-BRAINS.exe",
                     "Funny cat videos, cat videos, funny cats, funny cat videos 2025, cats funny videos, funny cat, funniest cats, cat video.",
                     R.raw.absolutely_normal_cats,
-                    ETRDatabase.getFrameFromVideo(this, R.raw.absolutely_normal_cats, 26000000)
+                    ETRDatabase.getThumbnailFromVideo(this, R.raw.absolutely_normal_cats, 26000000)
             );
         } catch (IOException e) {
             throw new RuntimeException(e);

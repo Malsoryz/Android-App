@@ -45,3 +45,5 @@ fun BottomNavigationBar() {
 ```
 Saya menggunakan `data class` untuk membuat kelas untuk menyimpan beberapa tipe data dan mungkin mirip seperti konsep `key value`
 (Jika ada cara yang lebih baik maka gunakan saja)
+
+Sumber https://developer.android.com/reference/kotlin/androidx/compose/material3/package-summary#navigationbar

@@ -4,8 +4,30 @@
 ## Navigation Bar
 Ini adalah Navigation Bar yang saya gunakan di Jetpack Compose
 ```kotlin
-var selectedItem by remember { mutableStateOf(navItems[0].route) }
+// data class untuk menyimpan data dari item Navigation Bar
+data class BottomNavigationItem(
+    val route: String, 
+    val selectedIcon: ImageVector, 
+    val unSelectedIcon: ImageVector, 
+    val label: String
+)
+// fungsi untuk membuat Navigation Bar
+@Composable
+fun BottomNavigationBar() {
+    // list nya berupa isi dari kelas BottomNavigationItem yang dibuat dengan data class
+    val navItems = listOf(
+        BottomNavigationItem(
+            route = "home",
+            selectedIcon = Icons.Filled.Home,
+            unSelectedIcon = Icons.Outlined.Home,
+            label = "Home"
+        ),
+        // tambahkan lebih banyak sesuai keperluan
+    )
+    // state Navigation Bar
+    var selectedItem by remember { mutableStateOf(navItems[0].route) }
 
+    // membuat Navigation Bar berdasarkan kelas BottomNavigationItem
     NavigationBar {
         navItems.forEach { item ->
             NavigationBarItem(
@@ -19,19 +41,7 @@ var selectedItem by remember { mutableStateOf(navItems[0].route) }
             )
         }
     }
-```
-Dan untuk menambahkan itemnya mungkin akan seperti ini
-```kotlin
-data class BottomNavigationItem(val route: String, val selectedIcon: ImageVector, val unSelectedIcon: ImageVector, val label: String)
-
-val navItems = listOf(
-    BottomNavigationItem(
-        route = "home",
-        selectedIcon = Icons.Filled.Home,
-        unSelectedIcon = Icons.Outlined.Home,
-        label = "Home"
-    ),
-)
+}
 ```
 Saya menggunakan `data class` untuk membuat kelas untuk menyimpan beberapa tipe data dan mungkin mirip seperti konsep `key value`
 (Jika ada cara yang lebih baik maka gunakan saja)

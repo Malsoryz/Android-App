@@ -22,19 +22,20 @@ import android.widget.Toast;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
-import java.util.zip.Inflater;
 
 public class Gameplay extends Fragment {
 
     private MainActivity activity;
     private Router router;
+
     private TextView countdownView;
     private LinearLayout countdownContainer;
 
     // constant variable
     private final int QUESTION_DURATION = 20;
     private final int EXTRA_POINT_DURATION = 5;
+    private final int COUNTDOWN_INTERVAL = 750;
+    private final int QUESTION_TIMER_INTERVAL = 1000;
 
     //game management
     private View gameplayLayout;
@@ -43,7 +44,8 @@ public class Gameplay extends Fragment {
     private TextView questionTextView, questionTimer;
     private LinearLayout questionButtonContainer, extraQuestionPoint;
     private List<Question> questionList;
-    private int phase, currentQuestionIndex, currentCountdownDuration, currentQuestionDuration, correctAnswer, wrongAnswer = 0;
+    private int phase, currentQuestionIndex, currentQuestionDuration, correctAnswer, wrongAnswer = 0;
+    private int currentCountdownDuration = 3;
     private Runnable runnableCountdown, runnableQuestionTimer;
 
     @Override
@@ -58,12 +60,6 @@ public class Gameplay extends Fragment {
         Question thirdQuestion = new Question("What is the capital of Thailand?", new String[]{"Jakarta", "Kuala Lumpur", "Bangkok", "Riyadh"}, "Bangkok", 0);
         questionList = new ArrayList<>();
         Collections.addAll(questionList, firstQuestion, secondQuestion, thirdQuestion);
-
-        currentCountdownDuration = 3;
-        currentQuestionDuration = QUESTION_DURATION;
-
-        runnableCountdown = countdownBeforeStart();
-        runnableQuestionTimer = startQuestionTimer();
     }
 
     @Override
@@ -89,13 +85,18 @@ public class Gameplay extends Fragment {
         questionProgressBar.setProgress(QUESTION_DURATION);
 
         countdownView = view.findViewById(R.id.countdownView);
-
         countdownContainer = view.findViewById(R.id.countdownContainer);
 
-        activity.handler.post(runnableCountdown);
+        startGame();
+        askBeforeLeave(new Runnable[] {runnableCountdown, runnableQuestionTimer});
+    }
 
-        Runnable[] runnables = {runnableCountdown, runnableQuestionTimer};
-        askBeforeLeave(runnables);
+    private void startGame() {
+        runnableCountdown = countdownBeforeStart();
+        runnableQuestionTimer = startQuestionTimer();
+        countdownView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 256);
+        countdownView.setText(String.valueOf(currentCountdownDuration));
+        activity.handler.post(runnableCountdown);
     }
 
     private void mapAnswerButton(Question question) {
@@ -106,35 +107,29 @@ public class Gameplay extends Fragment {
             newButton.setText(text);
             newButton.setId(getId);
             newButton.setOnClickListener(v -> {
-                if (currentQuestionDuration > 0) {
-                    answerQuestion(text, question);
-                } else if (currentQuestionDuration == 0) {
-                    Toast.makeText(activity, "Telat", Toast.LENGTH_SHORT).show();
-                }
+                if (currentQuestionDuration > 0) answerQuestion(text, question);
+                else if (currentQuestionDuration == 0) Toast.makeText(activity, "Telat", Toast.LENGTH_SHORT).show();
             });
         }
     }
 
     private Runnable countdownBeforeStart() {
+        phase = 0;
         return new Runnable() {
             @Override
             public void run() {
-                phase = 0;
-                int delay = 750;
                 currentCountdownDuration--;
                 if (currentCountdownDuration >= 0) {
-                    countdownView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 256);
                     countdownView.setText(String.valueOf(currentCountdownDuration + 1));
-                    activity.handler.postDelayed(this, delay);
+                    activity.handler.postDelayed(this, COUNTDOWN_INTERVAL);
                 } else {
                     countdownView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 100);
                     countdownView.setText("Mulai!");
-                    activity.handler.postDelayed(() -> countdownContainer.setVisibility(View.GONE), delay);
+                    activity.handler.postDelayed(() -> countdownContainer.setVisibility(View.GONE), COUNTDOWN_INTERVAL);
                     activity.handler.postDelayed(() -> {
-                        phase = 1;
                         gameplayLayout.setVisibility(View.VISIBLE);
                         nextQuestion(questionList);
-                    }, delay);
+                    }, COUNTDOWN_INTERVAL);
                     activity.handler.removeCallbacks(this);
                 }
             }
@@ -145,7 +140,6 @@ public class Gameplay extends Fragment {
         return new Runnable() {
             @Override
             public void run() {
-                int delay = 1000;
                 currentQuestionDuration--;
                 if (currentQuestionDuration >= 0) {
                     questionProgressBar.setProgress(currentQuestionDuration);
@@ -153,7 +147,7 @@ public class Gameplay extends Fragment {
                     if ((currentQuestionDuration) > (QUESTION_DURATION - EXTRA_POINT_DURATION)) {
                         extraQuestionPoint.setVisibility(View.VISIBLE);
                     } else extraQuestionPoint.setVisibility(View.GONE);
-                    activity.handler.postDelayed(this, delay);
+                    activity.handler.postDelayed(this, QUESTION_TIMER_INTERVAL);
                 } else {
                     questionProgressBar.setProgress(0);
                     questionTimer.setText("Waktu habis");
@@ -173,9 +167,10 @@ public class Gameplay extends Fragment {
             return;
         }
 
+        phase = 1;
         questionProgressBar.setProgress(QUESTION_DURATION);
-        Question question = questionList.get(currentQuestionIndex);
         currentQuestionDuration = QUESTION_DURATION;
+        Question question = questionList.get(currentQuestionIndex);
         questionTextView.setText(question.getQuestion());
         questionButtonContainer.removeAllViews();
         mapAnswerButton(question);
@@ -186,14 +181,12 @@ public class Gameplay extends Fragment {
     private void answerQuestion(String answer, Question question) {
         activity.handler.removeCallbacks(runnableQuestionTimer);
 
-        String[] allQuestionButton = question.getOptions();
-
-        for (String questionButton : allQuestionButton) {
+        for (String questionButton : question.getOptions()) {
             Button getButton = questionButtonContainer.findViewById(activity.stringToId(questionButton));
-            if (questionButton.equals(answer)) {
-                if (questionButton.equals(question.getCorrectAnswer())) {
-                    getButton.setBackgroundColor(Color.parseColor("#00FF00"));
-                } else getButton.setBackgroundColor(Color.parseColor("#FF0000"));
+            if (questionButton.equals(answer) && questionButton.equals(question.getCorrectAnswer())) {
+                getButton.setBackgroundColor(Color.parseColor("#00FF00"));
+            } else if (questionButton.equals(answer) && !questionButton.equals(question.getCorrectAnswer())) {
+                getButton.setBackgroundColor(Color.parseColor("#FF0000"));
             } else getButton.setBackgroundColor(Color.parseColor("#0000FF"));
         }
 
@@ -212,10 +205,10 @@ public class Gameplay extends Fragment {
 
     private void endGame() {
         phase = 2;
-        gameplayLayout.setVisibility(View.GONE);
-        countdownContainer.setVisibility(View.VISIBLE);
         int getCorrectAnswer = correctAnswer;
         int getWrongAnswer = wrongAnswer;
+        gameplayLayout.setVisibility(View.GONE);
+        countdownContainer.setVisibility(View.VISIBLE);
         countdownView.setText(String.format("%s %s", getCorrectAnswer, getWrongAnswer));
     }
 
@@ -225,19 +218,14 @@ public class Gameplay extends Fragment {
                     @Override
                     public void handleOnBackPressed() {
                         if (phase != 2) {
-                            for (Runnable run : runnable) {
-                                activity.handler.removeCallbacks(run);
-                            }
+                            for (Runnable run : runnable) activity.handler.removeCallbacks(run);
                             activity.makeDialog(
                                     "Confirm",
                                     "Membatalkan sesi permainan?",
                                     (dialog, which) -> router.navigateBack(),
                                     (dialog, which) -> {
-                                        if (phase == 0) {
-                                            activity.handler.post(runnableCountdown);
-                                        } else if (phase == 1) {
-                                            activity.handler.post(runnableQuestionTimer);
-                                        }
+                                        if (phase == 0) activity.handler.post(runnableCountdown);
+                                        else if (phase == 1) activity.handler.post(runnableQuestionTimer);
                                         dialog.dismiss();
                                     }
                             );

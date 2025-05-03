@@ -6,7 +6,6 @@ import android.os.Bundle;
 import android.os.Handler;
 
 import androidx.activity.EdgeToEdge;
-import androidx.activity.OnBackPressedCallback;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -18,11 +17,11 @@ import java.util.Objects;
 
 public class MainActivity extends AppCompatActivity {
 
+    public Router router;
     public final Handler handler = new Handler();
-    public String Dashboard = "Dashboard";
-    public String StageMenu = "StageMenu";
-    public String Gameplay = "Gameplay";
-    public HashMap<String, Fragment> route = new HashMap<>();;
+    public String dashboard = "Dashboard";
+    public String stageMenu = "StageMenu";
+    public String gameplay = "Gameplay";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,25 +33,16 @@ public class MainActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
-        route.put(Dashboard, new Dashboard());
-        route.put(StageMenu, new StageMenu());
-        route.put(Gameplay, new Gameplay());
 
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.FragmentPoint, Objects.requireNonNull(route.get(Dashboard)))
-                .commit();
-    }
+        router = new Router(getSupportFragmentManager(), R.id.FragmentPoint, this);
 
-    public void navigateTo(String routeName) {
-        getSupportFragmentManager()
-                .beginTransaction()
-                .replace(R.id.FragmentPoint, Objects.requireNonNull(route.get(routeName)))
-                .addToBackStack(null)
-                .commit();
-    }
-    public void navigateBack() {
-        getSupportFragmentManager().popBackStack();
+        router.addRoute(dashboard, Dashboard.class);
+        router.addRoute(stageMenu, StageMenu.class);
+        router.addRoute(gameplay, Gameplay.class);
+
+        if (savedInstanceState == null) {
+            router.navigateTo(dashboard, false);
+        }
     }
 
     public void makeDialog(String title, String message, DialogInterface.OnClickListener positive, DialogInterface.OnClickListener negative) {
@@ -62,5 +52,9 @@ public class MainActivity extends AppCompatActivity {
                 .setPositiveButton("Yes", positive)
                 .setNegativeButton("No", negative)
                 .show();
+    }
+
+    public int stringToId(String target) {
+        return Math.abs(target.hashCode() % Integer.MAX_VALUE);
     }
 }

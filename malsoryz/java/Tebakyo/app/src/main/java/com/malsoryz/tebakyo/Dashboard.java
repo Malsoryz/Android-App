@@ -13,14 +13,17 @@ import android.widget.Button;
 
 public class Dashboard extends Fragment {
 
-    private MainActivity action;
+    private MainActivity activity;
+    private Router router;
     private Button PlayButton;
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        action = (MainActivity) getActivity();
+        activity = (MainActivity) getActivity();
+        assert activity != null;
+        router = activity.router;
     }
 
     @Override
@@ -32,6 +35,6 @@ public class Dashboard extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         PlayButton = view.findViewById(R.id.PlayButton);
-        PlayButton.setOnClickListener(v -> action.navigateTo(action.StageMenu));
+        PlayButton.setOnClickListener(v -> router.navigateTo(activity.stageMenu, true));
     }
 }

@@ -15,14 +15,17 @@ import android.widget.ImageButton;
 
 public class StageMenu extends Fragment {
 
-    private MainActivity action;
+    private MainActivity activity;
+    private Router router;
     private ImageButton backButton;
     private Button stageOneButton;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        action = (MainActivity) getActivity();
+        activity = (MainActivity) getActivity();
+        assert activity != null;
+        router = activity.router;
     }
 
     @Override
@@ -34,8 +37,8 @@ public class StageMenu extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         backButton = view.findViewById(R.id.backButton);
-        backButton.setOnClickListener(v -> action.navigateBack());
+        backButton.setOnClickListener(v -> router.navigateBack());
         stageOneButton = view.findViewById(R.id.stageOne);
-        stageOneButton.setOnClickListener(v -> action.navigateTo(action.Gameplay));
+        stageOneButton.setOnClickListener(v -> router.navigateTo(activity.gameplay, true));
     }
 }

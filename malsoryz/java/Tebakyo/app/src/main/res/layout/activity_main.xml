@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/darker_purple"
+    android:background="@drawable/main_background"
     tools:context=".MainActivity">
 
     <FrameLayout
@@ -17,7 +17,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:padding="8dp"
-        android:text="Made By Muhammad Ikmal Al-Ansory XI RPL"
+        android:text="Made By Muhammad Ikmal Al-Ansory XI RPL 2"
         android:textColor="@color/light_purple"
         android:textAlignment="center"
         android:alpha="0.3"

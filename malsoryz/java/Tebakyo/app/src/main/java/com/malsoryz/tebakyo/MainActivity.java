@@ -14,12 +14,16 @@ import androidx.core.view.WindowInsetsCompat;
 
 public class MainActivity extends AppCompatActivity {
 
+    public final float MAIN_SOUND = 0.5f;
+    public final float GAMEPLAY_SOUND = 0.6f;
+    public final float RESULT_SOUND = 0.7f;
+
     public Router router;
     public final Handler handler = new Handler();
     public String dashboard = "Dashboard";
     public String stageMenu = "StageMenu";
     public String gameplay = "Gameplay";
-    public MediaPlayer backsound, buttonClicked, correctAnswerSound, wrongAnswerSound;
+    public MediaPlayer backsound, buttonClicked, answerSound;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
 
         if (savedInstanceState == null) {
             router.navigateTo(dashboard, false, false);
-            playBacksound(R.raw.main_backsound, 0.5f);
+            playBacksound(R.raw.main_backsound, MAIN_SOUND);
         }
     }
 
@@ -79,16 +83,10 @@ public class MainActivity extends AppCompatActivity {
         buttonClicked.start();
     }
 
-    public void correctSound() {
-        if (correctAnswerSound != null) correctAnswerSound.release();
-        correctAnswerSound = MediaPlayer.create(this, R.raw.correct_answer);
-        correctAnswerSound.start();
-    }
-
-    public void wrongSound() {
-        if (wrongAnswerSound != null) wrongAnswerSound.release();
-        wrongAnswerSound = MediaPlayer.create(this, R.raw.wrong_answer);
-        wrongAnswerSound.start();
+    public void answerSound(boolean isCorrect) {
+        if (this.answerSound != null) this.answerSound.release();
+        this.answerSound = MediaPlayer.create(this, isCorrect ? R.raw.correct_answer : R.raw.wrong_answer);
+        this.answerSound.start();
     }
 
     public void makeDialog(String title, String message, DialogInterface.OnClickListener positive, DialogInterface.OnClickListener negative) {

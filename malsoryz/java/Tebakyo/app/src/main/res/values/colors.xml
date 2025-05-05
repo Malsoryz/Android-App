@@ -4,10 +4,6 @@
     <color name="white">#FFFFFFFF</color>
     
     <!-- Color Pallete -->
-    <color name="blue01">#60B5FF</color>
-    <color name="blue02">#AFDDFF</color>
-    <color name="blue03">#223F59</color>
-    <color name="white01">#FFECDB</color>
     <color name="orange01">#FF9149</color>
 
     <!--    Real Pallete    -->
@@ -16,6 +12,8 @@
     <color name="normal_purple">#433D8B</color>
     <color name="light_purple">#C8ACD6</color>
 
-    <color name="gameplay_info">@color/light_purple</color>
-    <color name="extrapoint_info">#FF0000</color>
+    <color name="gameplay_info">#FCC737</color>
+    <color name="extrapoint_info">#FC6400</color>
+    <color name="correct_color">#4CAF50</color>
+    <color name="wrong_color">#F44336</color>
 </resources>

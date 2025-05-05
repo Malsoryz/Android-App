@@ -6,6 +6,7 @@ import android.os.Bundle;
 import androidx.activity.OnBackPressedCallback;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 
 import android.util.TypedValue;
@@ -92,12 +93,12 @@ public class Gameplay extends Fragment {
         countdownView = view.findViewById(R.id.countdownView);
         countdownContainer = view.findViewById(R.id.countdownContainer);
 
-        activity.playBacksound(R.raw.gameplay_backsound, 1.0f);
         startGame();
         askBeforeLeave(new Runnable[]{runnableCountdown, runnableQuestionTimer});
     }
 
     private void startGame() {
+        activity.playBacksound(R.raw.gameplay_backsound, activity.GAMEPLAY_SOUND);
         runnableCountdown = countdownBeforeStart();
         runnableQuestionTimer = startQuestionTimer();
         activity.handler.post(runnableCountdown);
@@ -149,6 +150,12 @@ public class Gameplay extends Fragment {
                 currentQuestionDuration--;
                 if (currentQuestionDuration >= 0) {
                     questionProgressBar.setProgress(currentQuestionDuration);
+                    questionProgressBar.setProgressDrawable(ContextCompat.getDrawable(requireContext(),
+                                    (currentQuestionDuration) > (QUESTION_DURATION - EXTRA_POINT_DURATION)
+                                            ? R.drawable.progressbar_style_extrapoint
+                                            : R.drawable.progressbar_style
+                            )
+                    );
                     questionTimer.setText(String.format("%ss", currentQuestionDuration));
                     questionIndex.setText(String.format("%s/%s", currentQuestionIndex + 1, questionList.size()));
                     extrapointTimer.setText(String.format("%ss", currentQuestionDuration - (QUESTION_DURATION - EXTRA_POINT_DURATION)));
@@ -180,6 +187,12 @@ public class Gameplay extends Fragment {
         Question question = questionList.get(currentQuestionIndex);
 
         questionProgressBar.setProgress(QUESTION_DURATION);
+        questionProgressBar.setProgressDrawable(ContextCompat.getDrawable(requireContext(),
+                (currentQuestionDuration) > (QUESTION_DURATION - EXTRA_POINT_DURATION)
+                        ? R.drawable.progressbar_style_extrapoint
+                        : R.drawable.progressbar_style
+                )
+        );
         questionTimer.setText(String.format("%ss", currentQuestionDuration));
         questionIndex.setText(String.format("%s/%s", currentQuestionIndex + 1, questionList.size()));
         extrapointTimer.setText(String.format("%ss", currentQuestionDuration - (QUESTION_DURATION - EXTRA_POINT_DURATION)));
@@ -200,18 +213,19 @@ public class Gameplay extends Fragment {
         long fullPoint = Math.round(normalPoint + extraPoint);
         for (String questionButton : question.getOptions()) {
             Button getButton = questionButtonContainer.findViewById(activity.stringToId(questionButton));
-            if (questionButton.equals(answer) && questionButton.equals(question.getCorrectAnswer())) {
-                getButton.setBackgroundColor(Color.parseColor("#00FF00"));
-                Toast.makeText(activity, "Benar " + fullPoint, Toast.LENGTH_SHORT).show();
-                point += fullPoint;
-                activity.correctSound();
-                correctAnswer++;
-            } else if (questionButton.equals(answer) && !questionButton.equals(question.getCorrectAnswer())) {
-                getButton.setBackgroundColor(Color.parseColor("#FF0000"));
-                Toast.makeText(activity, "Salah", Toast.LENGTH_SHORT).show();
-                activity.wrongSound();
-                wrongAnswer++;
-            } else getButton.setBackgroundColor(Color.parseColor("#0000FF"));
+            int buttonColor = ContextCompat.getColor(requireContext(),
+                    questionButton.equals(question.getCorrectAnswer())
+                            ? R.color.correct_color
+                            : R.color.wrong_color );
+            long pointValue = questionButton.equals(question.getCorrectAnswer()) ? fullPoint : 0;
+
+            if (questionButton.equals(answer)) {
+                activity.answerSound(questionButton.equals(question.getCorrectAnswer()));
+                getButton.setBackgroundColor(buttonColor);
+                point += pointValue;
+                if (questionButton.equals(question.getCorrectAnswer())) correctAnswer++;
+                else wrongAnswer++;
+            } else getButton.setAlpha(0.5f);
         }
 
         currentQuestionIndex++;
@@ -224,7 +238,7 @@ public class Gameplay extends Fragment {
         gameplayLayout.setVisibility(View.GONE);
         countdownContainer.setVisibility(View.VISIBLE);
         countdownView.setText(String.format("%s %s %s", correctAnswer, wrongAnswer, point));
-        activity.playBacksound(R.raw.result_backsound, 0.7f);
+        activity.playBacksound(R.raw.result_backsound, activity.RESULT_SOUND);
     }
 
     private void askBeforeLeave(Runnable[] runnable) {
@@ -239,7 +253,7 @@ public class Gameplay extends Fragment {
                                     "Membatalkan sesi permainan?",
                                     (dialog, which) -> {
                                         router.navigateBack();
-                                        activity.playBacksound(R.raw.main_backsound, 0.5f);
+                                        activity.playBacksound(R.raw.main_backsound, activity.MAIN_SOUND);
                                     },
                                     (dialog, which) -> {
                                         if (phase == 0) activity.handler.post(runnableCountdown);
@@ -249,7 +263,7 @@ public class Gameplay extends Fragment {
                             );
                         } else {
                             router.navigateBack();
-                            activity.playBacksound(R.raw.main_backsound, 0.5f);
+                            activity.playBacksound(R.raw.main_backsound, activity.MAIN_SOUND);
                         }
                     }
                 });

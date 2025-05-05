@@ -1,5 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <style name="progressBarStyle" parent="@android:style/Widget.ProgressBar.Horizontal">
+        <item name="android:progressDrawable">@drawable/progressbar_style</item>
+    </style>
+
     <style name="dashboard_menu_button" parent="Widget.MaterialComponents.Button">
         <item name="android:textSize">22sp</item>
         <item name="android:textColor">@color/light_purple</item>
@@ -7,6 +11,8 @@
         <item name="android:letterSpacing">0</item>
         <item name="cornerRadius">8dp</item>
         <item name="rippleColor">@color/normal_purple</item>
+        <item name="strokeWidth">1dp</item>
+        <item name="strokeColor">@color/normal_purple</item>
         <item name="backgroundTint">@color/dark_purple</item>
     </style>
 

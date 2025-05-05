@@ -1,6 +1,7 @@
 package com.malsoryz.tebakyo;
 
 import android.media.Image;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -39,6 +40,6 @@ public class StageMenu extends Fragment {
         backButton = view.findViewById(R.id.backButton);
         backButton.setOnClickListener(v -> router.navigateBack());
         stageOneButton = view.findViewById(R.id.stageOne);
-        stageOneButton.setOnClickListener(v -> router.navigateTo(activity.gameplay, true));
+        stageOneButton.setOnClickListener(v -> router.navigateTo(activity.gameplay, true, false));
     }
 }

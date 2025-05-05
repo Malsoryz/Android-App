@@ -19,6 +19,8 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.button.MaterialButton;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -32,8 +34,8 @@ public class Gameplay extends Fragment {
     private LinearLayout countdownContainer;
 
     // constant variable
-    private final int QUESTION_DURATION = 20;
-    private final int EXTRA_POINT_DURATION = 5;
+    private final int QUESTION_DURATION = 30;
+    private final int EXTRA_POINT_DURATION = 10;
     private final int COUNTDOWN_INTERVAL = 750;
     private final int QUESTION_TIMER_INTERVAL = 1000;
 
@@ -41,11 +43,12 @@ public class Gameplay extends Fragment {
     private View gameplayLayout;
     private ProgressBar questionProgressBar;
     private ImageView questionImage;
-    private TextView questionTextView, questionTimer;
+    private TextView questionTextView, questionTimer, questionIndex, extrapointTimer;
     private LinearLayout questionButtonContainer, extraQuestionPoint;
     private List<Question> questionList;
-    private int phase, currentQuestionIndex, currentQuestionDuration, correctAnswer, wrongAnswer = 0;
+    private int phase, currentQuestionIndex, currentQuestionDuration, currentExtraPointDuration, correctAnswer, wrongAnswer = 0;
     private int currentCountdownDuration = 3;
+    private long point = 0;
     private Runnable runnableCountdown, runnableQuestionTimer;
 
     @Override
@@ -56,7 +59,7 @@ public class Gameplay extends Fragment {
         router = activity.router;
 
         Question firstQuestion = new Question("What is the capital of Indonesia?", new String[]{"Jakarta", "Bandung", "Surabaya", "Banjarmasin"}, "Jakarta", 0);
-        Question secondQuestion = new Question("What is the capital of Malaysia?", new String[]{"Jakarta", "Kuala Lumpur", "Surabaya", "New York"}, "Kuala Lumpur", 0);
+        Question secondQuestion = new Question("What is the capital of Malaysia?", new String[]{"Jakarta", "Kuala Lumpur", "Surabaya", "New York"}, "Kuala Lumpur", 1);
         Question thirdQuestion = new Question("What is the capital of Thailand?", new String[]{"Jakarta", "Kuala Lumpur", "Bangkok", "Riyadh"}, "Bangkok", 0);
         questionList = new ArrayList<>();
         Collections.addAll(questionList, firstQuestion, secondQuestion, thirdQuestion);
@@ -76,6 +79,8 @@ public class Gameplay extends Fragment {
 
         questionProgressBar = gameplayLayout.findViewById(R.id.questionProgressBar);
         questionTimer = gameplayLayout.findViewById(R.id.questionTimer);
+        questionIndex = gameplayLayout.findViewById(R.id.questionIndex);
+        extrapointTimer = gameplayLayout.findViewById(R.id.extrapointTimer);
         questionImage = gameplayLayout.findViewById(R.id.questionImage);
         questionTextView = gameplayLayout.findViewById(R.id.questionTextView);
         questionButtonContainer = gameplayLayout.findViewById(R.id.questionButtonContainer);
@@ -87,15 +92,14 @@ public class Gameplay extends Fragment {
         countdownView = view.findViewById(R.id.countdownView);
         countdownContainer = view.findViewById(R.id.countdownContainer);
 
+        activity.playBacksound(R.raw.gameplay_backsound, 1.0f);
         startGame();
-        askBeforeLeave(new Runnable[] {runnableCountdown, runnableQuestionTimer});
+        askBeforeLeave(new Runnable[]{runnableCountdown, runnableQuestionTimer});
     }
 
     private void startGame() {
         runnableCountdown = countdownBeforeStart();
         runnableQuestionTimer = startQuestionTimer();
-        countdownView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 256);
-        countdownView.setText(String.valueOf(currentCountdownDuration));
         activity.handler.post(runnableCountdown);
     }
 
@@ -103,7 +107,7 @@ public class Gameplay extends Fragment {
         for (String text : question.getOptions()) {
             View answerButtons = getLayoutInflater().inflate(R.layout.answer_button, questionButtonContainer);
             int getId = activity.stringToId(text);
-            Button newButton = answerButtons.findViewById(R.id.answerButton);
+            MaterialButton newButton = answerButtons.findViewById(R.id.answerButton);
             newButton.setText(text);
             newButton.setId(getId);
             newButton.setOnClickListener(v -> {
@@ -115,6 +119,8 @@ public class Gameplay extends Fragment {
 
     private Runnable countdownBeforeStart() {
         phase = 0;
+        countdownView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 256);
+        countdownView.setText(String.valueOf(currentCountdownDuration));
         return new Runnable() {
             @Override
             public void run() {
@@ -143,10 +149,11 @@ public class Gameplay extends Fragment {
                 currentQuestionDuration--;
                 if (currentQuestionDuration >= 0) {
                     questionProgressBar.setProgress(currentQuestionDuration);
-                    questionTimer.setText(String.valueOf(currentQuestionDuration));
-                    if ((currentQuestionDuration) > (QUESTION_DURATION - EXTRA_POINT_DURATION)) {
-                        extraQuestionPoint.setVisibility(View.VISIBLE);
-                    } else extraQuestionPoint.setVisibility(View.GONE);
+                    questionTimer.setText(String.format("%ss", currentQuestionDuration));
+                    questionIndex.setText(String.format("%s/%s", currentQuestionIndex + 1, questionList.size()));
+                    extrapointTimer.setText(String.format("%ss", currentQuestionDuration - (QUESTION_DURATION - EXTRA_POINT_DURATION)));
+                    if ((currentQuestionDuration) > (QUESTION_DURATION - EXTRA_POINT_DURATION)) currentExtraPointDuration--;
+                    else activity.handler.postDelayed(() -> extraQuestionPoint.setVisibility(View.GONE), 1000);
                     activity.handler.postDelayed(this, QUESTION_TIMER_INTERVAL);
                 } else {
                     questionProgressBar.setProgress(0);
@@ -168,9 +175,16 @@ public class Gameplay extends Fragment {
         }
 
         phase = 1;
-        questionProgressBar.setProgress(QUESTION_DURATION);
         currentQuestionDuration = QUESTION_DURATION;
+        currentExtraPointDuration = EXTRA_POINT_DURATION;
         Question question = questionList.get(currentQuestionIndex);
+
+        questionProgressBar.setProgress(QUESTION_DURATION);
+        questionTimer.setText(String.format("%ss", currentQuestionDuration));
+        questionIndex.setText(String.format("%s/%s", currentQuestionIndex + 1, questionList.size()));
+        extrapointTimer.setText(String.format("%ss", currentQuestionDuration - (QUESTION_DURATION - EXTRA_POINT_DURATION)));
+        extraQuestionPoint.setVisibility(View.VISIBLE);
+        questionImage.setVisibility(question.getImage() == 0 ? View.GONE : View.VISIBLE);
         questionTextView.setText(question.getQuestion());
         questionButtonContainer.removeAllViews();
         mapAnswerButton(question);
@@ -181,21 +195,23 @@ public class Gameplay extends Fragment {
     private void answerQuestion(String answer, Question question) {
         activity.handler.removeCallbacks(runnableQuestionTimer);
 
+        double normalPoint = (currentQuestionDuration <= (QUESTION_DURATION - EXTRA_POINT_DURATION)) ? currentQuestionDuration * ((double) 100 / (QUESTION_DURATION - EXTRA_POINT_DURATION)) : 100;
+        double extraPoint = 3 * currentExtraPointDuration;
+        long fullPoint = Math.round(normalPoint + extraPoint);
         for (String questionButton : question.getOptions()) {
             Button getButton = questionButtonContainer.findViewById(activity.stringToId(questionButton));
             if (questionButton.equals(answer) && questionButton.equals(question.getCorrectAnswer())) {
                 getButton.setBackgroundColor(Color.parseColor("#00FF00"));
+                Toast.makeText(activity, "Benar " + fullPoint, Toast.LENGTH_SHORT).show();
+                point += fullPoint;
+                activity.correctSound();
+                correctAnswer++;
             } else if (questionButton.equals(answer) && !questionButton.equals(question.getCorrectAnswer())) {
                 getButton.setBackgroundColor(Color.parseColor("#FF0000"));
+                Toast.makeText(activity, "Salah", Toast.LENGTH_SHORT).show();
+                activity.wrongSound();
+                wrongAnswer++;
             } else getButton.setBackgroundColor(Color.parseColor("#0000FF"));
-        }
-
-        if (answer.equals(question.getCorrectAnswer())) {
-            Toast.makeText(activity, "Benar", Toast.LENGTH_SHORT).show();
-            correctAnswer++;
-        } else {
-            Toast.makeText(activity, "Salah", Toast.LENGTH_SHORT).show();
-            wrongAnswer++;
         }
 
         currentQuestionIndex++;
@@ -205,11 +221,10 @@ public class Gameplay extends Fragment {
 
     private void endGame() {
         phase = 2;
-        int getCorrectAnswer = correctAnswer;
-        int getWrongAnswer = wrongAnswer;
         gameplayLayout.setVisibility(View.GONE);
         countdownContainer.setVisibility(View.VISIBLE);
-        countdownView.setText(String.format("%s %s", getCorrectAnswer, getWrongAnswer));
+        countdownView.setText(String.format("%s %s %s", correctAnswer, wrongAnswer, point));
+        activity.playBacksound(R.raw.result_backsound, 0.7f);
     }
 
     private void askBeforeLeave(Runnable[] runnable) {
@@ -222,14 +237,20 @@ public class Gameplay extends Fragment {
                             activity.makeDialog(
                                     "Confirm",
                                     "Membatalkan sesi permainan?",
-                                    (dialog, which) -> router.navigateBack(),
+                                    (dialog, which) -> {
+                                        router.navigateBack();
+                                        activity.playBacksound(R.raw.main_backsound, 0.5f);
+                                    },
                                     (dialog, which) -> {
                                         if (phase == 0) activity.handler.post(runnableCountdown);
                                         else if (phase == 1) activity.handler.post(runnableQuestionTimer);
                                         dialog.dismiss();
                                     }
                             );
-                        } else router.navigateBack();
+                        } else {
+                            router.navigateBack();
+                            activity.playBacksound(R.raw.main_backsound, 0.5f);
+                        }
                     }
                 });
     }

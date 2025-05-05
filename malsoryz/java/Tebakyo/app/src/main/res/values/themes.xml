@@ -4,6 +4,7 @@
         <!-- Customize your light theme here. -->
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
         <item name="fontFamily">@font/comicneue_bold</item>
+        <item name="android:textColor">@color/light_purple</item>
     </style>
 
     <style name="Theme.Tebakyo" parent="Base.Theme.Tebakyo" />

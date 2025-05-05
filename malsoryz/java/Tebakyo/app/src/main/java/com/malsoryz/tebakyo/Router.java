@@ -26,16 +26,20 @@ public class Router {
         routes.put(name, fragmentClass);
     }
 
-    public void navigateTo(String routeName, boolean addToBackStack) {
+    public void navigateTo(String routeName, boolean addToBackStack, boolean animation) {
         Class<? extends Fragment> fragmentClass = routes.get(routeName);
         try {
             if (fragmentClass != null) {
                 Fragment fragment = fragmentClass.newInstance();
                 FragmentTransaction transaction = fragmentManager.beginTransaction();
+                if (animation) transaction.setCustomAnimations(
+                        R.anim.slide_in_right,
+                        R.anim.slide_out_left,
+                        R.anim.slide_in_left,
+                        R.anim.slide_out_right
+                );
                 transaction.replace(containerId, fragment, routeName);
-                if (addToBackStack) {
-                    transaction.addToBackStack(routeName);
-                }
+                if (addToBackStack) transaction.addToBackStack(routeName);
                 transaction.commit();
             } else {
                 Toast.makeText(context, String.format("Route %s is not exist", routeName), Toast.LENGTH_SHORT).show();

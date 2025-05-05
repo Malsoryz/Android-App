@@ -9,4 +9,13 @@
     <color name="blue03">#223F59</color>
     <color name="white01">#FFECDB</color>
     <color name="orange01">#FF9149</color>
+
+    <!--    Real Pallete    -->
+    <color name="darker_purple">#17153B</color>
+    <color name="dark_purple">#2E236C</color>
+    <color name="normal_purple">#433D8B</color>
+    <color name="light_purple">#C8ACD6</color>
+
+    <color name="gameplay_info">@color/light_purple</color>
+    <color name="extrapoint_info">#FF0000</color>
 </resources>

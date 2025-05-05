@@ -1,5 +1,6 @@
 package com.malsoryz.tebakyo;
 
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 import androidx.annotation.NonNull;
@@ -34,7 +35,15 @@ public class Dashboard extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+        ViewGroup menuButtonContainer = view.findViewById(R.id.menuButtonContainer);
+        for (int i = 0; i < menuButtonContainer.getChildCount(); i++) {
+            View button = menuButtonContainer.getChildAt(i);
+            if (button instanceof Button) {
+                button.setOnClickListener(v -> activity.clickSound());
+            }
+        }
+
         PlayButton = view.findViewById(R.id.PlayButton);
-        PlayButton.setOnClickListener(v -> router.navigateTo(activity.stageMenu, true));
+        PlayButton.setOnClickListener(v -> router.navigateTo(activity.stageMenu, true, true));
     }
 }
